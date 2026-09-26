@@ -24,6 +24,7 @@ class PostCreate(PostBase):
     pass
 
 class PostResponse(PostBase):
+    id:int
     owner_id:int
     owner:UserOut
     class Config:
