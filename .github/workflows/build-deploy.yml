@@ -8,3 +8,12 @@ jobs:
         uses: actions/checkout@v4
       - name: say hi to satvik
         run: echo "hello satvik"
+      - name: install python version 
+        uses: actions/checkout@v7
+        with:
+          python-version: '3.13'
+      - name: update pip
+        run: python -m pip install --upgrade pip
+      - name: install all dependencies
+        run: pip install -r requirements.txt
+
