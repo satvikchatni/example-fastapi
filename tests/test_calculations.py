@@ -38,7 +38,7 @@ def test_bank_set_initial_amt(bank_account):
     assert bank_account.balance==50
 
 def test_withdraw(bank_account):
-    bank_account.withdraw(60)
+    bank_account.withdraw(20)
     assert bank_account.balance==30
 
 def test_deposit(bank_account):
