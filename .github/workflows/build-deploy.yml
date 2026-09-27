@@ -1,60 +1,47 @@
+# 1. Give the pipeline a name and tell it when to run (on every push)
 name: Build and Deploy Code
 on: [push, pull_request]
+
 jobs:
   job1:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # 2. Rent a blank Linux computer from GitHub
+    
     env:
-      PYTHONUNBUFFERED: 1
+      # 3. Type out the temporary passwords and configuration settings 
+      # so the Python app can read them in the cloud.
       DATABASE_HOSTNAME: 127.0.0.1
-      DATABASE_PORT: 5432
-      DATABASE_USERNAME: postgres
       DATABASE_NAME: fastapi
       DATABASE_PASSWORD: adminpassword
-      # 🗹 FIXED: Hardcoded the algorithm definition directly to bypass missing secret environments
       ALGORITHM: HS256
-      # 🗹 FIXED: Hardcoded a secure fallback verification key exclusively for test-container runs
       SECRET_KEY: testing_secret_key_9d25e094faa6ca2556c818166b7a9563b
-      ACCESS_TOKEN_EXPIRE_MINUTES: 30
 
     services:
-      postgres:
+      postgres: # 4. Create a brand new temporary database container right next to our app
         image: postgres:15
         env:
-          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: adminpassword
           POSTGRES_DB: fastapi
-          POSTGRES_HOST_AUTH_METHOD: trust
-        ports:
-          - '5432:5432'
+          POSTGRES_HOST_AUTH_METHOD: trust # Trust local traffic so we don't lock ourselves out
 
     steps:
-      - name: pulling git repo
+      - name: pulling git repo # 5. Download your code onto the blank Linux computer
         uses: actions/checkout@v4
 
-      - name: Clear Committed Local Env Cache
-        run: |
-          rm -f .env
-          rm -f app/.env
-          rm -f tests/.env
+      # - name: Clear Committed Local Env Cache # 6. Delete any old .env files you accidentally pushed
+      #   run: |
+      #     rm -f .env
 
-      - name: install python version 
+      - name: install python version # 7. Install Python on the cloud machine
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
 
-      - name: install all dependencies
+      - name: install all dependencies # 8. Install everything inside your requirements.txt file
         run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install -r requirements.txt
           pip install pytest httpx
 
-      - name: test with pytest
-        env:
-          PGHOST: 127.0.0.1
-          PGUSER: postgres
-          PGPASSWORD: adminpassword
-          PGDATABASE: fastapi
+      - name: test with pytest # 9. Run the tests!
         run: python -m pytest tests/ -vv -s
 
 
