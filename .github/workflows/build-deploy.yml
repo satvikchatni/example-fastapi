@@ -8,7 +8,8 @@ jobs:
       DATABASE_HOSTNAME: 127.0.0.1
       DATABASE_PORT: 5432
       DATABASE_USERNAME: postgres
-      DATABASE_NAME: fastapitest
+      # 🗹 MATCHED: Changed from fastapitest to fastapi to satisfy your code's fallback name
+      DATABASE_NAME: fastapi
       DATABASE_PASSWORD: adminpassword
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       ALGORITHM: ${{ secrets.ALGORITHM }}
@@ -20,7 +21,8 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: adminpassword
-          POSTGRES_DB: fastapitest
+          # 🗹 MATCHED: Changed the temporary container database name to fastapi
+          POSTGRES_DB: fastapi
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - '5432:5432'
@@ -51,10 +53,11 @@ jobs:
         env:
           PGHOST: 127.0.0.1
           PGUSER: postgres
-          # 🗹 FIXED: Aligned these overrides with your top level variables perfectly!
           PGPASSWORD: adminpassword
-          PGDATABASE: fastapitest
+          # 🗹 MATCHED: Set the override to match fastapi
+          PGDATABASE: fastapi
         run: python -m pytest tests/ -vv -s
+
 
 
 
