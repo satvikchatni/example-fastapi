@@ -1,48 +1,70 @@
-# 1. Give the pipeline a name and tell it when to run (on every push)
 name: Build and Deploy Code
 on: [push, pull_request]
 
 jobs:
   job1:
-    runs-on: ubuntu-latest # 2. Rent a blank Linux computer from GitHub
-    
+    runs-on: ubuntu-latest
     env:
-      # 3. Type out the temporary passwords and configuration settings 
-      # so the Python app can read them in the cloud.
+      PYTHONUNBUFFERED: 1
       DATABASE_HOSTNAME: 127.0.0.1
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: postgres
       DATABASE_NAME: fastapi
       DATABASE_PASSWORD: adminpassword
       ALGORITHM: HS256
       SECRET_KEY: testing_secret_key_9d25e094faa6ca2556c818166b7a9563b
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
 
     services:
-      postgres: # 4. Create a brand new temporary database container right next to our app
+      postgres:
         image: postgres:15
         env:
+          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: adminpassword
           POSTGRES_DB: fastapi
-          POSTGRES_HOST_AUTH_METHOD: trust # Trust local traffic so we don't lock ourselves out
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - '5432:5432'
 
     steps:
-      - name: pulling git repo # 5. Download your code onto the blank Linux computer
+      - name: pulling git repo
         uses: actions/checkout@v4
 
-      - name: Clear Committed Local Env Cache # 6. Delete any old .env files you accidentally pushed
+      # Force clear any hidden env files completely
+      - name: Clear Committed Local Env Cache
         run: |
           rm -f .env
+          rm -f app/.env
+          rm -f tests/.env
 
-      - name: install python version # 7. Install Python on the cloud machine
+      - name: install python version 
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
-      - name: install all dependencies # 8. Install everything inside your requirements.txt file
+      - name: install all dependencies
         run: |
-          pip install -r requirements.txt
-          pip install pytest httpx
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest httpx pydantic-settings
 
-      - name: test with pytest # 9. Run the tests!
+      # 🔍 DEBUG STEP: Let's see what variables are alive in the cloud terminal
+      - name: Inspect Cloud Variables
+        run: |
+          echo "Checking system values:"
+          echo "Hostname is: $DATABASE_HOSTNAME"
+          echo "Port is: $DATABASE_PORT"
+          echo "Username is: $DATABASE_USERNAME"
+
+      - name: test with pytest
+        env:
+          PGHOST: 127.0.0.1
+          PGUSER: postgres
+          PGPASSWORD: adminpassword
+          PGDATABASE: fastapi
         run: python -m pytest tests/ -vv -s
+
 
 
 
