@@ -5,7 +5,7 @@ jobs:
     environment:
       name: dev
     env:
-      DATABASE_HOSTNAME: ${{secrets.DATABASE_HOSTNAME}}
+      DATABASE_HOSTNAME: 127.0.0.1
       DATABASE_PORT: ${{secrets.DATABASE_PORT}}
       DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
       DATABASE_USERNAME: ${{secrets.DATABASE_USERNAME}}
