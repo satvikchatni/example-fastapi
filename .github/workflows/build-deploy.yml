@@ -8,11 +8,12 @@ jobs:
       DATABASE_HOSTNAME: 127.0.0.1
       DATABASE_PORT: 5432
       DATABASE_USERNAME: postgres
-      # 🗹 MATCHED: Changed from fastapitest to fastapi to satisfy your code's fallback name
       DATABASE_NAME: fastapi
       DATABASE_PASSWORD: adminpassword
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      ALGORITHM: ${{ secrets.ALGORITHM }}
+      # 🗹 FIXED: Hardcoded the algorithm definition directly to bypass missing secret environments
+      ALGORITHM: HS256
+      # 🗹 FIXED: Hardcoded a secure fallback verification key exclusively for test-container runs
+      SECRET_KEY: testing_secret_key_9d25e094faa6ca2556c818166b7a9563b
       ACCESS_TOKEN_EXPIRE_MINUTES: 30
 
     services:
@@ -21,7 +22,6 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: adminpassword
-          # 🗹 MATCHED: Changed the temporary container database name to fastapi
           POSTGRES_DB: fastapi
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
@@ -54,7 +54,6 @@ jobs:
           PGHOST: 127.0.0.1
           PGUSER: postgres
           PGPASSWORD: adminpassword
-          # 🗹 MATCHED: Set the override to match fastapi
           PGDATABASE: fastapi
         run: python -m pytest tests/ -vv -s
 
