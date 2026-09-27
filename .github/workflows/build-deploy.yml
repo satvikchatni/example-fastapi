@@ -8,8 +8,8 @@ jobs:
       DATABASE_HOSTNAME: 127.0.0.1
       DATABASE_PORT: 5432
       DATABASE_USERNAME: postgres
-      DATABASE_NAME: fastapi_test
-      DATABASE_PASSWORD: admin123
+      DATABASE_NAME: fastapitest
+      DATABASE_PASSWORD: adminpassword
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       ALGORITHM: ${{ secrets.ALGORITHM }}
       ACCESS_TOKEN_EXPIRE_MINUTES: 30
@@ -19,8 +19,8 @@ jobs:
         image: postgres:15
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: admin123
-          POSTGRES_DB: fastapi_test
+          POSTGRES_PASSWORD: adminpassword
+          POSTGRES_DB: fastapitest
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - '5432:5432'
@@ -51,9 +51,11 @@ jobs:
         env:
           PGHOST: 127.0.0.1
           PGUSER: postgres
-          PGPASSWORD: admin123
-          PGDATABASE: fastapi_test
+          # 🗹 FIXED: Aligned these overrides with your top level variables perfectly!
+          PGPASSWORD: adminpassword
+          PGDATABASE: fastapitest
         run: python -m pytest tests/ -vv -s
+
 
 
 
