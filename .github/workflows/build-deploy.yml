@@ -9,6 +9,7 @@ jobs:
       DATABASE_PORT: 5432
       DATABASE_USERNAME: postgres
       DATABASE_NAME: fastapi_test
+      # 🗹 The temporary cloud instance will use this password cleanly
       DATABASE_PASSWORD: admin123
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       ALGORITHM: ${{ secrets.ALGORITHM }}
@@ -32,6 +33,12 @@ jobs:
       - name: pulling git repo
         uses: actions/checkout@v4
 
+      # 🗹 FIXED: Deletes any hardcoded .env file that might be hijacking your configurations!
+      - name: Clear Committed Local Env Cache
+        run: |
+          rm -f .env
+          rm -f app/.env
+
       - name: install python version 
         uses: actions/setup-python@v5
         with:
@@ -45,7 +52,6 @@ jobs:
           pip install pytest httpx
 
       - name: test with pytest
-        
         env:
           PGHOST: 127.0.0.1
         run: python -m pytest tests/ -vv -s
