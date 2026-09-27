@@ -6,6 +6,8 @@ jobs:
     environment:
       name: dev
     env:
+      # ⚡ CRITICAL: Forces Python to flush logs instantly so they don't get trapped on freeze
+      PYTHONUNBUFFERED: 1
       DATABASE_HOSTNAME: 127.0.0.1
       DATABASE_PORT: 5432
       DATABASE_USERNAME: postgres
@@ -46,7 +48,9 @@ jobs:
           pip install pytest httpx
 
       - name: test with pytest
-        run: python -m pytest tests/ -v
+        # 🗹 Added absolute verbose and terminal capturing flags
+        run: python -m pytest tests/ -vv -s
+
 
 
 
