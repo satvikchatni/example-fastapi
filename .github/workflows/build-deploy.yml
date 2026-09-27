@@ -10,9 +10,9 @@ jobs:
       DATABASE_PORT: 5432
       DATABASE_USERNAME: postgres
       DATABASE_NAME: fastapi
-      DATABASE_PASSWORD: adminpassword
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       ALGORITHM: HS256
-      SECRET_KEY: testing_secret_key_9d25e094faa6ca2556c818166b7a9563b
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
       ACCESS_TOKEN_EXPIRE_MINUTES: 30
 
     services:
@@ -20,7 +20,7 @@ jobs:
         image: postgres:15
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: adminpassword
+          POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           POSTGRES_DB: fastapi
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
@@ -55,7 +55,7 @@ jobs:
         env:
           PGHOST: 127.0.0.1
           PGUSER: postgres
-          PGPASSWORD: adminpassword
+          PGPASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           PGDATABASE: fastapi
         run: python -m pytest tests/ -vv -s
 
