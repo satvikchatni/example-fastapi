@@ -90,6 +90,9 @@ jobs:
           no-cache: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/fastapi:latest
+      - name: Trigger Render Deployment
+          run:  |
+            curl -fS -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
 
 
 
