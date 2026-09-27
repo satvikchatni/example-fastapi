@@ -27,9 +27,9 @@ jobs:
       - name: pulling git repo # 5. Download your code onto the blank Linux computer
         uses: actions/checkout@v4
 
-      # - name: Clear Committed Local Env Cache # 6. Delete any old .env files you accidentally pushed
-      #   run: |
-      #     rm -f .env
+      - name: Clear Committed Local Env Cache # 6. Delete any old .env files you accidentally pushed
+        run: |
+          rm -f .env
 
       - name: install python version # 7. Install Python on the cloud machine
         uses: actions/setup-python@v5
