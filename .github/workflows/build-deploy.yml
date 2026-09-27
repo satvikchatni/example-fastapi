@@ -91,7 +91,7 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/fastapi:latest
       - name: Trigger Render Deployment
-          run:  |
+        run:  |
             curl -fS -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
 
 
