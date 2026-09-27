@@ -47,7 +47,7 @@ jobs:
          pip install pytest
       - name: test with pytest
         run:
-          python -m pytest
+          python -m pytest --timeout=20
 
 
 

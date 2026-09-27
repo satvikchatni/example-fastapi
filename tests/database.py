@@ -4,9 +4,12 @@ from sqlalchemy import create_engine
 
 from sqlalchemy.orm import sessionmaker,declarative_base
 
-SQL_DB_URL='postgresql://postgres:Rishabh%402007@localhost/fastapi_test'
+from app.config import settings
 
-engine = create_engine(SQL_DB_URL)
+SQLALCHEMY_DATABASE_URL = f"postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}"
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+
+
 
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Base.metadata.create_all(bind=engine)
