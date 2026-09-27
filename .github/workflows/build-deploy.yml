@@ -45,28 +45,9 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install pytest httpx
 
-      # 🔍 DIAGNOSTIC STEP: Bypasses pytest to look inside your config files directly
-      - name: Debug Environment and Configurations
-        run: |
-          python -c "
-          try:
-              print('--- Checking Environment Variables ---')
-              import os
-              print('Hostname:', os.getenv('DATABASE_HOSTNAME'))
-              print('Port:', os.getenv('DATABASE_PORT'))
-              
-              print('\n--- Attempting to Import App Configurations ---')
-              from app.config import settings
-              print('Successfully imported settings!')
-              print('Configured Host:', settings.database_hostname)
-          except Exception as e:
-              import traceback
-              print('\n💥 CRASH DETECTED DURING IMPORT:')
-              traceback.print_exc()
-          "
-
       - name: test with pytest
-        run: python -m pytest
+        run: python -m pytest -v
+
 
 
 
