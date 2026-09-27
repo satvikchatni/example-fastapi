@@ -18,13 +18,12 @@ jobs:
       postgres:
         image: postgres:15
         env:
+          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: admin123
           POSTGRES_DB: fastapi_test
-          # 🗹 FIXED: Forces the temporary cloud DB container to trust the runner interface loops
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - '5432:5432'
-        # 🗹 FIXED: Removed the slow health check options to prevent the 30-second workflow stall
 
     steps:
       - name: pulling git repo
@@ -34,6 +33,7 @@ jobs:
         run: |
           rm -f .env
           rm -f app/.env
+          rm -f tests/.env
 
       - name: install python version 
         uses: actions/setup-python@v5
@@ -50,6 +50,9 @@ jobs:
       - name: test with pytest
         env:
           PGHOST: 127.0.0.1
+          PGUSER: postgres
+          PGPASSWORD: admin123
+          PGDATABASE: fastapi_test
         run: python -m pytest tests/ -vv -s
 
 
